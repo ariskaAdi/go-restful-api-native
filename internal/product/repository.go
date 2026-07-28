@@ -14,7 +14,7 @@ func NewRepository(pool *pgxpool.Pool) *Repository {
 	return &Repository{pool: pool}
 }
 
-func (r *Repository) findAll(ctx context.Context) ([]Product, error) {
+func (r *Repository) FindAll(ctx context.Context) ([]Product, error) {
 
 	rows, err := r.pool.Query(ctx,
 		"SELECT id, name, price, stock, created_at FROM products")

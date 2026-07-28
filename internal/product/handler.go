@@ -1,21 +1,26 @@
 package product
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 )
 
-type Handler struct {
-	repo *Repository
+type service interface {
+	FindAll(ctx context.Context) ([]ProductResponse, error)
 }
 
-func NewHandler(repo *Repository) *Handler {
-	return &Handler{repo: repo}
+type Handler struct {
+	service service
+}
+
+func NewHandler(service service) *Handler {
+	return &Handler{service: service}
 }
 
 func (h *Handler) GetAll(w http.ResponseWriter, r *http.Request) {
 
-	products, err := h.repo.findAll(r.Context())
+	products, err := h.service.FindAll(r.Context())
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
